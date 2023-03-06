@@ -16,7 +16,8 @@
     "next": "13.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "svg-country-flags": "^1.2.10"
+    "svg-country-flags": "^1.2.10",
+    "use-persisted-state": "^0.3.3"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.13",

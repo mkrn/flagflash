@@ -33,17 +33,18 @@ function pickFourWithOne(arr, mustInclude) {
 
 const bebas = Bebas_Neue({ subsets: ["latin"], weight: "400" });
 
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      startcountry: getRandomCountry(),
-    }, // will be passed to the page component as props
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       startcountry: getRandomCountry(),
+//     }, // will be passed to the page component as props
+//   };
+// }
 
-export default function Home({ startcountry }) {
+export default function Home({}) {
   const [country, setcountry] = useState(null);
   const [score, setscore] = useState(0);
+  const [highScore, setHighScore] = useState(0);
 
   const [lives, setlives] = useState(5);
   const [randomCountries, setrandomCountries] = useState([]);
@@ -57,7 +58,13 @@ export default function Home({ startcountry }) {
   };
 
   useEffect(() => {
+    setHighScore(localStorage.getItem("highScore") || 0);
+    // localStorage.setItem ('dataKey',
+    // if (typeof window === "undefined") {
+    // }
+    // set high score from localStorage
     reset();
+    return () => {};
   }, []);
 
   const Flag = ({ code }) => (
@@ -85,11 +92,16 @@ export default function Home({ startcountry }) {
             FlagFLASH
           </h1> */}
 
-          <div className="p-5 text-right">
-            <span className={`text-xl ${bebas.className}`}>{score} </span>
-            {Array.from({ length: lives }, (_, i) => (
-              <span key={i}>❤️</span>
-            ))}
+          <div className="p-5 flex justify-between	">
+            <span className={`text-xl flex-none ${bebas.className}`}>
+              High Score {highScore}{" "}
+            </span>
+            <span className={`text-xl flex-none ${bebas.className}`}>
+              {score}{" "}
+              {Array.from({ length: lives }, (_, i) => (
+                <span key={i}>❤️</span>
+              ))}
+            </span>
           </div>
 
           {country && <Flag code={country} />}
@@ -102,12 +114,19 @@ export default function Home({ startcountry }) {
                 onClick={() => {
                   if (c === country) {
                     // correcty !!
+                    localStorage.setItem(
+                      "highScore",
+                      Math.max(score + 1, highScore)
+                    );
                     setscore(score + 1);
                     reset();
                   } else {
                     if (lives > 1) {
                       setlives(lives - 1);
                     } else {
+                      const high = Math.max(score, highScore);
+                      setHighScore(high);
+                      localStorage.setItem("highScore", high);
                       setscore(0);
                       setlives(5);
                     }
